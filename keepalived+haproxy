@@ -1,0 +1,126 @@
+###########ACTIVE################
+
+##############https://code.getnoc.com/noc/noc/-/issues/1237
+
+################cat /etc/keepalived/keepalived.conf
+global_defs {
+}
+
+vrrp_script check_haproxy
+{
+    script "pidof haproxy"
+#    interval 2
+#    weight 2
+}
+
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface ens224
+    virtual_router_id 51
+    priority 100
+    advert_int 1
+
+    use_vmac ## MUST! for using virtual mac address vrrp (00:00:5e:*) and not using physical mac address
+    vmac_xmit_base ## MUST! for advertise from physical interface
+
+    authentication {
+        auth_type PASS
+        auth_pass 12345678
+    }
+    virtual_ipaddress {
+        10.1.0.199/27
+    }
+
+track_script {
+        check_haproxy
+    }
+}
+}
+
+#########cat /etc/haproxy/haproxy.cfg
+global
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy123
+    group       haproxy123
+    daemon
+
+#    stats socket /var/lib/haproxy/stats
+
+defaults
+    mode                    tcp
+    log                     global
+    timeout queue           5s
+    timeout connect         10s
+    timeout client          10s
+    timeout server          5s
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 3000
+
+listen stats
+    bind *:8080
+    mode http
+    stats enable
+    stats uri /
+    stats hide-version
+    stats auth haproxy:haproxy
+
+frontend  rabbitmq-frontend
+    bind *:5672
+    mode tcp
+    default_backend rabbitmq-backend
+
+backend rabbitmq-backend
+    balance     roundrobin
+    server  kz-e100-rbt1 10.1.0.219:5672 check port 5672 inter 2s rise 2 fall 3
+    server  kz-e100-rbt2 10.1.0.215:5672 check port 5672 inter 2s rise 2 fall 3
+    server  kz-e100-rbt3 10.1.0.222:5672 check port 5672 inter 2s rise 2 fall 3
+
+
+
+##################BACKUP@#############################
+###############cat /etc/keepalived/keepalived.conf
+
+global_defs {
+}
+
+
+vrrp_script check_haproxy
+{
+    script "pidof haproxy"
+    interval 2
+    weight 2
+}
+
+
+vrrp_instance VI_1 {
+    state BACKUP
+    interface ens224
+    virtual_router_id 1
+    priority 1
+    advert_int 1
+
+    use_vmac ## MUST! for using virtual mac address vrrp (00:00:5e:*) and not using physical mac address
+    vmac_xmit_base ## MUST! for advertise from physical interface
+
+    authentication {
+        auth_type PASS
+        auth_pass 123456Aa
+    }
+    virtual_ipaddress {
+        10.1.0.199/27
+    }
+
+
+track_script {
+        check_haproxy
+    }
+
+}
+
+}
+
+
