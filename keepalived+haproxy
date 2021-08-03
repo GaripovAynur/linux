@@ -9,8 +9,8 @@ global_defs {
 vrrp_script check_haproxy
 {
     script "pidof haproxy"
-#    interval 2
-#    weight 2
+    interval 2
+    weight 2
 }
 
 
