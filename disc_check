@@ -21,3 +21,12 @@ partprobe /dev/sdc
 
 #Increase partition
 resize2fs /dev/sdc1
+
+
+df -h
+echo 1>/sys/class/block/sdc/device/rescan
+fdisk -l
+fdisk /dev/sdc ### d n w
+partprobe /dev/sdc
+resize2fs /dev/sdc1
+df -h
