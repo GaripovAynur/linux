@@ -1,0 +1,23 @@
+#Rescan disk (sdb)
+echo 1>/sys/class/block/sdc/device/rescan
+
+
+#Confirm size 
+fdisk -l
+
+#Resize disk (sdb)
+	fdisk /dev/sdc
+	d - delete
+	
+	n - create new partition
+	p - primary
+	
+	
+	w - write and exit
+
+
+#Check new partition size
+partprobe /dev/sdc
+
+#Increase partition
+resize2fs /dev/sdc1
