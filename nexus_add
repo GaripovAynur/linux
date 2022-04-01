@@ -1,0 +1,8 @@
+download
+cat 1 | awk -F= '{print $5}' | awk -F\" '{print $2}'
+for i in $(cat 1 | awk -F= '{print $5}' | awk -F\" '{print $2}'); do wget https://download.bareos.org/bareos/release/21/CentOS_7/x86_64/$i; done
+
+Upload
+curl -v -u user:password --upload-file bareos-bconsole-21.0.0-4.el7.x86_64.rpm https://nexus.b12.ru/repository/bareos/7/x86_64/Packages/bareos-bconsole-21.0.0-4.el7.x86_64.rpm
+or
+for i in $(ls); do curl -v -u agaripov:Init123# --upload-file $i https://nexus.b12.ru/repository/bareos/7/x86_64/Packages/$i; done
