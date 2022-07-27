@@ -1,5 +1,5 @@
 #Add new disk
-fdisk /dev/sdc ### n d w
+fdisk /dev/sdc ### n w
 mkfs -t ext4 /dev/sdc1
 mount -t ext4 /dev/sdc1 /opensearch
 blkid
