@@ -15,3 +15,9 @@ fdisk /dev/sdc ### d n w
 partprobe /dev/sdc
 resize2fs /dev/sdc1
 df -h
+
+### XFS
+yum -y install cloud-utils-growpart gdisk
+growpart /dev/sdb 1
+xfs_growfs -d /dev/sdb1
+xfs_growfs /var
