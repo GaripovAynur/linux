@@ -18,6 +18,7 @@ df -h
 
 ### XFS
 yum -y install cloud-utils-growpart gdisk
+echo 1>/sys/class/block/sdb/device/rescan
 growpart /dev/sdb 1
 xfs_growfs -d /dev/sdb1
 xfs_growfs /var
