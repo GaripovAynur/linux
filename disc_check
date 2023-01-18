@@ -22,3 +22,9 @@ echo 1>/sys/class/block/sdb/device/rescan
 growpart /dev/sdb 1
 xfs_growfs -d /dev/sdb1
 xfs_growfs /var
+
+
+### Repair disk
+sudo -i
+fsck -y /dev/sd*
+fsck -y /dev/mapper/*
