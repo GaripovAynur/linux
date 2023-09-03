@@ -1,9 +1,25 @@
+sed -i '/^\/dev\/mapper\/ro_host--10--41--10--5-swap/ s/^/#/' /etc/fstab
+
 #Add new disk
 fdisk /dev/sdc ### n w
 mkfs -t ext4 /dev/sdc1
 mount -t ext4 /dev/sdc1 /opensearch
 blkid
 UUID=577bc574-7bfb-4672-b969-45e5dc0c0cee /opensearch             ext4    defaults      0 0
+
+
+#LVM
+
+echo -e "n\np\n3\n\n\nw" | fdisk /dev/vda
+reboot
+pvcreate /dev/vda3
+vgextend ro_host-10-41-10-5 /dev/vda3
+pvscan
+lvextend -l+100%FREE /dev/ro_host-10-41-10-5/root
+resize2fs /dev/ro_host-10-41-10-5/root
+lsblk
+
+
 
 
 
