@@ -11,7 +11,7 @@ UUID=577bc574-7bfb-4672-b969-45e5dc0c0cee /opensearch             ext4    defaul
 #LVM
 
 echo -e "n\np\n3\n\n\nw" | fdisk /dev/vda
-reboot
+reboot or partprobe
 pvcreate /dev/vda3
 vgextend ro_host-10-41-10-5 /dev/vda3
 pvscan
