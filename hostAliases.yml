@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 1
+  template:
+    spec:
+      hostAliases:
+      - ip: "192.168.10.14"
+        hostnames:
+        - "plex.lab.home" 
+      containers:
