@@ -25,12 +25,16 @@ lsblk
 
 #Rescan disk (sdc)
 df -h
-echo 1>/sys/class/block/sdc/device/rescan
-fdisk -l
-fdisk /dev/sdc ### d n w
+echo 1 > /sys/class/block/sdc/device/rescan
+fdisk -l /dev/sdc
+fdisk /dev/sdc    # d → n → (Enter ×4, Start должен совпасть со старым) → на "remove the signature?" ответить N → w
 partprobe /dev/sdc
 resize2fs /dev/sdc1
 df -h
+
+Ещё проще без fdisk, тогда сигнатура не под угрозой:
+growpart /dev/sdc 1      # пакет cloud-guest-utils
+resize2fs /dev/sdc1
 
 ### XFS
 yum -y install cloud-utils-growpart gdisk
